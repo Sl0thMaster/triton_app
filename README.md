@@ -178,8 +178,3 @@ python client\\client.py
 
 Лабораторная работа по развертыванию модели в Triton Inference Server.
 """
-
-path = "/mnt/data/README.md"
-pypandoc.convert_text(content, 'md', format='md', outputfile=path, extra_args=['--standalone'])
-
-path
