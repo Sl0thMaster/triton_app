@@ -1,9 +1,3 @@
-# Create a README.md file for the user using pypandoc as required
-import pypandoc, textwrap, os
-
-content = """
-# Toxicity Classifier (Triton Server)
-
 ## Описание
 
 Проект разворачивает модель классификации токсичности текста с использованием Triton Inference Server.
