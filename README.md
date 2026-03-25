@@ -1,4 +1,4 @@
-## Описание
+# ML-сервис в Triton Inference Server
 
 Проект разворачивает модель классификации токсичности текста с использованием Triton Inference Server.
 Клиент отправляет текст на сервер, сервер обрабатывает его через модель и возвращает вероятности классов.
@@ -7,8 +7,8 @@
 
 ---
 
-# Структура проекта
-
+## Структура проекта
+```
 triton_app/
 
 model_repository/
@@ -23,10 +23,10 @@ client/
 requirements.txt
 Dockerfile
 README.md
-
+```
 ---
 
-# Требования
+## Требования
 
 Перед запуском необходимо установить:
 
@@ -36,85 +36,84 @@ README.md
 
 ---
 
-# Установка проекта
+## Установка проекта
 
 Склонировать репозиторий
-
+```
 git clone https://github.com/Sl0thMaster/triton_app.git
-
+```
 Перейти в папку проекта
-
+```
 cd triton_app
+```
 
----
-
-# Создание виртуального окружения (Windows)
-
+Создание виртуального окружения (Windows)
+```
 python -m venv venv
-
+```
 Активация окружения
-
+```
 venv\\Scripts\\activate
-
+```
 Установка зависимостей
-
+```
 pip install -r requirements.txt
-
+```
 ---
 
-# Сборка Docker образа
-
+## Сборка Docker образа
+```
 docker build -t triton_toxicity .
-
+```
 ---
 
-# Запуск сервера Triton
-
-docker run --rm ^
--p 8000:8000 ^
--p 8001:8001 ^
--p 8002:8002 ^
--v %cd%/model_repository:/models ^
-triton_toxicity ^
+## Запуск сервера Triton
+```
+docker run --rm `
+-p 8000:8000 `
+-p 8001:8001 `
+-p 8002:8002 `
+-v ${PWD}/model_repository:/models `
+triton_toxicity `
 tritonserver --model-repository=/models
-
+```
 После запуска сервер будет доступен по адресу
-
+```
 http://localhost:8000
-
+```
 Проверка состояния сервера
-
+```
 http://localhost:8000/v2/health/ready
-
+```
 Если сервер работает, он вернет
-
+```
 OK
-
+```
 ---
 
-# Запуск клиента
+## Запуск клиента
 
 Открыть новый терминал в папке проекта.
 
 Активировать виртуальное окружение
-
+```
 venv\\Scripts\\activate
-
+```
 Запустить клиент
-
+```
 python client\\client.py
-
+```
 ---
 
-# Пример запроса
+## Пример запроса
 
 Клиент отправляет список текстов:
-
+```
 sample = [
 "Привет, как дела?",
 "Ты идиот"
 ]
-
+```
 Ответ сервера содержит:
 
 - исходный текст
@@ -122,59 +121,18 @@ sample = [
 - предсказанный класс
 
 Пример ответа
-
+```
 [
 {'text': 'Привет, как дела?', 'label': 0, 'probs': [...]},
 {'text': 'Ты идиот', 'label': 1, 'probs': [...]}
 ]
-
+```
 ---
 
-# Частые ошибки
-
-Ошибка формы входа
-
-unexpected shape for input
-
-Решение:
-
-в config.pbtxt установить
-
-max_batch_size: 0
-
----
-
-Ошибка PyTorch
-
-AutoModelForSequenceClassification requires the PyTorch library
-
-Решение:
-
-установить PyTorch версии 2.4 или выше
-
-pip install torch>=2.4
-
----
-
-Ошибка CUDA
-
-CUDA driver version is insufficient for CUDA runtime version
-
-Можно игнорировать, если используется CPU версия PyTorch.
-
----
-
-# Тестирование
+## Тестирование
 
 После запуска сервера выполнить
-
+```
 python client\\client.py
-
+```
 Если модель работает корректно, клиент вернет предсказания для тестовых строк.
-
----
-
-# Автор
-
-Лабораторная работа по развертыванию модели в Triton Inference Server.
-"""

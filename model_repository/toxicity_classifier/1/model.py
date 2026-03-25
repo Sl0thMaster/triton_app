@@ -9,7 +9,6 @@ MODEL_ID = "s-nlp/russian_toxicity_classifier"
 
 class TritonPythonModel:
     def initialize(self, args):
-        # args содержит метаданные, но модель и токенизатор загружаем явно
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
         self.model = AutoModelForSequenceClassification.from_pretrained(MODEL_ID)
@@ -19,9 +18,7 @@ class TritonPythonModel:
     def execute(self, requests):
         responses = []
         for request in requests:
-            # получить входной тензор строк
             in_tensor = pb_utils.get_input_tensor_by_name(request, "INPUT_TEXT")
-            # as_numpy() для TYPE_STRING возвращает numpy array dtype=object или bytes
             raw = in_tensor.as_numpy()
             texts = []
             for x in raw:
@@ -50,7 +47,6 @@ class TritonPythonModel:
         return responses
 
     def finalize(self):
-        # освобождение ресурсов при выгрузке модели
         try:
             del self.model
             del self.tokenizer
